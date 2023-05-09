@@ -8,7 +8,7 @@ function shallowEqual(object1, object2) {
 const optimise = (substitutes, originalId, count) => {
     //get original from substitutes
     const original = substitutes.find(item => item.id === originalId);
-    
+    //Ziemniak
     const content = original.amount;
     const totalContentCount = content * count;
     const dose = original.dose.split("+").map(d => parseFloat(d));
