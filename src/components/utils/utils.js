@@ -1,0 +1,1 @@
+export const requestPath = "http://localhost:8080";
