@@ -13,7 +13,6 @@ const Search = () => {
 
     const handleSearchButtonOnClick = () => {
         setSearchPhrase(input);
-        console.log(input);
         navigate("/searchResults");
     }
 //2x = (100vh - 176) / 2 - h
