@@ -1,1 +1,1 @@
-export const requestPath = "http://localhost:8080";
+export const requestPath = "https://swallow-backend.herokuapp.com/";
