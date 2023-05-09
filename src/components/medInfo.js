@@ -7,7 +7,6 @@ export function MedInfo(props) {
     const [ chosenMed, setChosenMed ] = useState();
 
     const setMedInfo = (_boxAmount, _refundLevel, _chosenMed) => {
-        console.log(_boxAmount, _refundLevel, _chosenMed);
         setChosenMed({
             ..._chosenMed,
             refund: _refundLevel,

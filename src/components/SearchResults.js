@@ -21,25 +21,21 @@ const SearchResults = () => {
     const [input, setInput] = useState("");
     
     const getMedsLikeSearch = async () => {
-        console.log(requestPath);
         const medsLikeSearch = await fetch(`${requestPath}/drugs?search=${searchPhrase}`, {
             method: 'GET'
         });
         const medsLikeSearchJson = await medsLikeSearch.json();
         const medsLikeSearchJsonSorted
             = await medsLikeSearchJson.sort((a, b) => a.name > b.name);
-        console.log(medsLikeSearchJsonSorted);
         setMeds(medsLikeSearchJson);
     }
 
     useEffect(() => {
-        console.log(searchPhrase);
         setInput(searchPhrase);
         getMedsLikeSearch();
     }, [])
 
     const handleSearchButtonOnClick = () => {
-        console.log("xd");
         setSearchPhrase(input);
         getMedsLikeSearch();
     }

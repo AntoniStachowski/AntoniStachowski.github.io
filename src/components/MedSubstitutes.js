@@ -53,9 +53,6 @@ const MedSubstitutes = () => {
     const widthSum = resultWidth + medPropertiesWithStyle.reduce(function(a,b){
         return a+b.widthPercentage;
     }, 0);
-    console.log(widthSum);
-
-    console.log(chosenMed);
 
     const medPropertiesFewer = [
         {
@@ -99,7 +96,6 @@ const MedSubstitutes = () => {
     }
 
     const getSubstitutes = async () => {
-        console.log(requestPath);
         const substitutes = await fetch(`${requestPath}/drugs/${chosenMed.id}`, {
             method: 'GET'
         });
@@ -116,7 +112,6 @@ const MedSubstitutes = () => {
                 
             }));
         setSubstitutes(realSubstitutes);
-        console.log(realSubstitutes);
     }
 
     useEffect(() => {
