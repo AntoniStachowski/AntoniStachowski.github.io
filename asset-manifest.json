@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/AntoniStachowski.github.io/static/css/main.97e6721a.css",
-    "main.js": "/AntoniStachowski.github.io/static/js/main.25b8e790.js",
-    "static/js/787.039d02fc.chunk.js": "/AntoniStachowski.github.io/static/js/787.039d02fc.chunk.js",
-    "static/media/logo2copy.svg": "/AntoniStachowski.github.io/static/media/logo2copy.b378688609cc67459d024426f4a4f856.svg",
-    "index.html": "/AntoniStachowski.github.io/index.html",
-    "main.97e6721a.css.map": "/AntoniStachowski.github.io/static/css/main.97e6721a.css.map",
-    "main.25b8e790.js.map": "/AntoniStachowski.github.io/static/js/main.25b8e790.js.map",
-    "787.039d02fc.chunk.js.map": "/AntoniStachowski.github.io/static/js/787.039d02fc.chunk.js.map"
+    "main.css": "/static/css/main.97e6721a.css",
+    "main.js": "/static/js/main.fc999ed6.js",
+    "static/js/787.039d02fc.chunk.js": "/static/js/787.039d02fc.chunk.js",
+    "static/media/logo2copy.svg": "/static/media/logo2copy.b378688609cc67459d024426f4a4f856.svg",
+    "index.html": "/index.html",
+    "main.97e6721a.css.map": "/static/css/main.97e6721a.css.map",
+    "main.fc999ed6.js.map": "/static/js/main.fc999ed6.js.map",
+    "787.039d02fc.chunk.js.map": "/static/js/787.039d02fc.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.97e6721a.css",
-    "static/js/main.25b8e790.js"
+    "static/js/main.fc999ed6.js"
   ]
 }
