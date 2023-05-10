@@ -50,7 +50,7 @@ const optimise = (substitutes, originalId, count, refund) => {
         if (price > bestPrice) {
             return;
         }
-        return {price: price, substitute: substitute};
+        return {price: price, amount: neededSubstituteCount, substitute: substitute};
     }
 
     const result = substitutes.map(calculatePrice).filter(item => item !== undefined);
