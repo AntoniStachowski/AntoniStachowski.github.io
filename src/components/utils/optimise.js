@@ -19,7 +19,7 @@ const optimise = (substitutes, originalId, count, refund) => {
         if (shallowEqual(substitute, original)) {
             return;
         }
-        if (substitute.refund !== refund) {
+        if (substitute.refund != refund) {
             return;
         }
         const substitutePrice = substitute.upcharge;
