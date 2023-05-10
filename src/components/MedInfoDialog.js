@@ -4,10 +4,8 @@ import { ErrorContext } from "./errors";
 import { useNavigate } from "react-router-dom";
 import { MedContext } from "./medInfo";
 
-const MedInfoDialog = ({isOpen, setIsOpen, clickedMed}) => {
-    //TODO - dostępne poziomy refundacji, placeholder pierwszy z listy
+const MedInfoDialog = ({isOpen, setIsOpen, clickedMed, refunds}) => {
     const [refund, setRefund] = useState("30%");
-    const refunds = ["30%", "50%", "ryczałt", "bezpłatny do limitu"];
     const [textFieldValue, setTextFieldValue] = useState("");
     const { setMedInfo } = useContext(MedContext);
 
