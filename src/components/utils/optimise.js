@@ -5,7 +5,7 @@ function shallowEqual(object1, object2) {
     return object1.id == object2.id;
   }
 
-const optimise = (substitutes, originalId, count) => {
+const optimise = (substitutes, originalId, count, refund) => {
     //get original from substitutes
     const original = substitutes.find(item => item.id === originalId);
     //Ziemniak
@@ -17,6 +17,9 @@ const optimise = (substitutes, originalId, count) => {
 
     const calculatePrice = (substitute) => {
         if (shallowEqual(substitute, original)) {
+            return;
+        }
+        if (substitute.refund !== refund) {
             return;
         }
         const substitutePrice = substitute.upcharge;
