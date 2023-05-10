@@ -96,21 +96,23 @@ const MedSubstitutes = () => {
     }
 
     const getSubstitutes = async () => {
+        console.log(chosenMed);
         const substitutes = await fetch(`${requestPath}/drugs/${chosenMed.id}`, {
             method: 'GET'
         });
         const substitutesJson = await substitutes.json();
         const realSubstitutes =
             optimise(substitutesJson, chosenMed.id, chosenMed.boxAmount, chosenMed.refund)
-            .map(({price, substitute}) => ({
+            .map(({price, amount, substitute}) => ({
                 price,
                 substitute: {
                     ...substitute,
-                    boxAmount: Math.round(price / substitute.upcharge), 
+                    boxAmount: amount,
                     upcharge: substitute.upcharge + " zł",
                 }
                 
             }));
+        console.log(realSubstitutes);
         setSubstitutes(realSubstitutes);
     }
 
