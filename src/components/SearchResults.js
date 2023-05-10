@@ -25,6 +25,7 @@ const SearchResults = () => {
         });
         
         const medsLikeSearchJson = await medsLikeSearch.json();
+        console.log(medsLikeSearchJson);
         const medsLikeSearchJsonSorted
             = await medsLikeSearchJson.sort(
                 (a, b) =>
