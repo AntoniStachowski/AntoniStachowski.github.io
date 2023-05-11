@@ -29,12 +29,12 @@ const SearchResults = () => {
         const medsLikeSearchJsonSorted
             = await medsLikeSearchJson.sort(
                 (a, b) =>
-                    (a.name > b.name)
+                    {return (a.name > b.name)
                     || (a.name == b.name && a.formDose > b.formDose)
-                    || (a.name == b.name && a.formDose == b.formDose && a.content > b.content)
+                    || (a.name == b.name && a.formDose == b.formDose && a.content > b.content)}
             );
         let medsLikeSearchJsonSortedNoDuplicates = [];
-        medsLikeSearchJson.forEach(element => {
+        medsLikeSearchJsonSorted.forEach(element => {
             let wasDuplicate = false;
             medsLikeSearchJsonSortedNoDuplicates.forEach(element2 => {
                 if (element.name === element2.name && element.formDose === element2.formDose && element.content === element2.content) {
@@ -45,13 +45,6 @@ const SearchResults = () => {
                 medsLikeSearchJsonSortedNoDuplicates.push(element);
             }
         });
-        medsLikeSearchJsonSortedNoDuplicates = 
-            await medsLikeSearchJsonSortedNoDuplicates.sort(
-                (a, b) =>
-                    (a.name > b.name)
-                    || (a.name == b.name && a.formDose > b.formDose)
-                    || (a.name == b.name && a.formDose == b.formDose && a.content > b.content)
-            );
         setMedsDuplicates(medsLikeSearchJsonSorted);
         setMeds(medsLikeSearchJsonSortedNoDuplicates);
     }
