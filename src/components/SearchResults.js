@@ -25,13 +25,12 @@ const SearchResults = () => {
         });
         
         const medsLikeSearchJson = await medsLikeSearch.json();
-        console.log(medsLikeSearchJson);
         const medsLikeSearchJsonSorted
             = await medsLikeSearchJson.sort(
                 (a, b) =>
-                    {return (a.name > b.name)
+                    (a.name > b.name)
                     || (a.name == b.name && a.formDose > b.formDose)
-                    || (a.name == b.name && a.formDose == b.formDose && a.content > b.content)}
+                    || (a.name == b.name && a.formDose == b.formDose && a.content > b.content)
             );
         let medsLikeSearchJsonSortedNoDuplicates = [];
         medsLikeSearchJsonSorted.forEach(element => {
