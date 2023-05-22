@@ -27,10 +27,13 @@ const SearchResults = () => {
         const medsLikeSearchJson = await medsLikeSearch.json();
         const medsLikeSearchJsonSorted
             = await medsLikeSearchJson.sort(
-                (a, b) =>
-                    (a.name > b.name)
+                (a, b) => {
+                    if ((a.name > b.name)
                     || (a.name == b.name && a.formDose > b.formDose)
-                    || (a.name == b.name && a.formDose == b.formDose && a.content > b.content)
+                    || (a.name == b.name && a.formDose == b.formDose && a.content > b.content)) return 1;
+                    if (a.name == b.name && a.formDose == b.formDose && a.content == b.content) return 0;
+                    return -1;
+                }
             );
         let medsLikeSearchJsonSortedNoDuplicates = [];
         medsLikeSearchJsonSorted.forEach(element => {
