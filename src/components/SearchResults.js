@@ -7,6 +7,7 @@ import SnackBar from "./SnackBar";
 import { MedContext } from "./medInfo";
 import SearchField from "./utils/SearchField";
 import { requestPath } from "./utils/utils";
+import {jsPDF} from 'jspdf';
 
 const SearchResults = () => {
     const [meds, setMeds] = useState([]);
@@ -62,6 +63,16 @@ const SearchResults = () => {
     }
 
     const handleOnClick = (med, key) => {
+        console.log(document.getElementsByTagName('html')[0].innerHTML);
+        //console log html body
+        console.log(document.querySelector('body').innerHTML);
+        var doc = new jsPDF();   
+
+        doc.html(document.body, {
+        callback: function (doc) {
+            doc.save();
+        }
+        });
         setIsDialogOpen(true);
         setClickedMed({key: key, ...med})
 
