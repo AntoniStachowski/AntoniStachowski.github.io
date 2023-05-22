@@ -8,6 +8,7 @@ import { MedContext } from "./medInfo";
 import SearchField from "./utils/SearchField";
 import { requestPath } from "./utils/utils";
 import {jsPDF} from 'jspdf';
+import { html2pdf } from "html2pdf.js";
 
 const SearchResults = () => {
     const [meds, setMeds] = useState([]);
@@ -66,13 +67,24 @@ const SearchResults = () => {
         console.log(document.getElementsByTagName('html')[0].innerHTML);
         //console log html body
         console.log(document.querySelector('body').innerHTML);
-        var doc = new jsPDF();   
+        //get element "logo"
+        console.log(document.getElementById('logo').innerHTML);
+        var body = document.querySelector('body').innerHTML;
+        //remove "background-image: [...]" from body using regex
+        body = body.replace(/background-image: url\([^)]+\);/g, "");
+        console.log(body);
 
-        doc.html(document.body, {
+        var doc = new jsPDF('l', 'mm', [1200, 1210]);   
+
+        /*doc.html(body, {
         callback: function (doc) {
             doc.save();
-        }
-        });
+        },
+        x: 10,
+		y: 10
+        });*/
+        var html = document.getElementById('page');
+        html2pdf().from(html).save();
         setIsDialogOpen(true);
         setClickedMed({key: key, ...med})
 
@@ -87,7 +99,7 @@ const SearchResults = () => {
     }
 
     return (
-        <div style = {{display: "flex", flexDirection: "column", width: "100vw", height: "100vh"}}>
+        <div style = {{display: "flex", flexDirection: "column", width: "100vw", height: "100vh"}} id="page">
             <MedInfoDialog
                 isOpen = {isDialogOpen}
                 setIsOpen = {setIsDialogOpen}
@@ -109,7 +121,7 @@ const SearchResults = () => {
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "top 20px left 30px",
                 backgroundColor: "#000000"
-            }}>
+            }} id="logo">
                 <SearchField
                     sx = {{maxWidth: 600, flex: 1, marginLeft: 20}}
                     input = {input}
