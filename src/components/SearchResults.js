@@ -46,6 +46,7 @@ const SearchResults = () => {
     const {searchPhrase, setSearchPhrase} = useContext(MedContext);
     const [input, setInput] = useState("");
     const [refunds, setRefunds] = useState([]);
+    const [disabled, setDisabled] = useState(false);
     
     const getMedsLikeSearch = async () => {
         const phrase = input === "" ? searchPhrase : input;
@@ -89,9 +90,15 @@ const SearchResults = () => {
         getMedsLikeSearch();
     }, [])
 
-    const handleSearchButtonOnClick = () => {
+    const handleSearchButtonOnClick = async () => {
+        if(disabled) {
+            console.log("disabled");
+            return;
+        }
+        setDisabled(true);
         setSearchPhrase(input);
-        getMedsLikeSearch();
+        await getMedsLikeSearch();
+        setDisabled(false);
     }
 
     const handleOnClick = async (med, key) => {
