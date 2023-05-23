@@ -14,6 +14,8 @@ const Search = () => {
     const handleSearchButtonOnClick = () => {
         //let inputFixed = input.replace("%", "%25").replace(/\\/, "%5c").replace("|", "%7c");
         setSearchPhrase(input);
+        //out input to local storage
+        localStorage.setItem("searchPhrase", input);
         navigate("/searchResults");
     }
 //2x = (100vh - 176) / 2 - h

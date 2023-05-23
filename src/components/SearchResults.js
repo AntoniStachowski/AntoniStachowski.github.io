@@ -43,12 +43,14 @@ const SearchResults = () => {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [clickedMed, setClickedMed] = useState({});
-    const {searchPhrase, setSearchPhrase} = useContext(MedContext);
+    //const {searchPhrase, setSearchPhrase} = useContext(MedContext);
+    let searchPhrase = ""; 
     const [input, setInput] = useState("");
     const [refunds, setRefunds] = useState([]);
     const [disabled, setDisabled] = useState(false);
     
     const getMedsLikeSearch = async () => {
+        searchPhrase = localStorage.getItem("searchPhrase");
         const phrase = input === "" ? searchPhrase : input;
         let phraseFixed = phrase;
         for (let i = 0; i < escapeChar.length; i++) {
@@ -96,7 +98,8 @@ const SearchResults = () => {
             return;
         }
         setDisabled(true);
-        setSearchPhrase(input);
+        //setSearchPhrase(input);
+        localStorage.setItem("searchPhrase", input);
         await getMedsLikeSearch();
         setDisabled(false);
     }
