@@ -35,7 +35,13 @@ const MedInfoDialog = ({isOpen, setIsOpen, clickedMed, refunds}) => {
         setTextFieldValue("");
         setIsOpen(false);
 
-        setMedInfo(textFieldValue, refund, clickedMed);
+        localStorage.setItem("boxAmount", textFieldValue);
+        localStorage.setItem("refund", refund);
+        localStorage.setItem("chosenMed", JSON.stringify(clickedMed));
+
+        console.log("clickedMed: ", clickedMed);
+        console.log("chosenMed: ", JSON.parse(localStorage.getItem("chosenMed")));
+        //setMedInfo(textFieldValue, refund, clickedMed);
         navigate("/substitutes");
     }
 

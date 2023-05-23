@@ -9,9 +9,13 @@ import { requestPath } from "./utils/utils";
 import optimise from "./utils/optimise";
 import FabPDF from "./FabPDF";
 
+var chosenMed = JSON.parse(localStorage.getItem("chosenMed"));
+
 const MedSubstitutes = () => {
     const theme = useTheme();
-    const {chosenMed, setMedInfo} = React.useContext(MedContext);
+    //const {chosenMed, setMedInfo} = React.useContext(MedContext);
+    var boxAmount = localStorage.getItem("boxAmount");
+    var refund = localStorage.getItem("refund");
     const medPropertiesWithStyle = [
         {
             name: "name",
@@ -86,14 +90,16 @@ const MedSubstitutes = () => {
     const [substitutes, setSubstitutes] = useState([]);
 
     const changeChosenMed = () => {
-        setMedInfo(
-            chosenMed.boxAmount,
-            chosenMed.refund,
+        chosenMed = JSON.parse(localStorage.getItem("chosenMed"));
+        chosenMed = 
             {
+                boxAmount: localStorage.getItem("boxAmount"),
                 ...chosenMed,
-                upcharge: chosenMed.upcharge + " zł"
-            }
-        );
+                refund: localStorage.getItem("refund"),
+                //add " zł" to upcharge if it's not there
+                upcharge: String(chosenMed.upcharge).includes("zł") ? chosenMed.upcharge : chosenMed.upcharge + " zł"
+            };
+        console.log(chosenMed);
     }
 
     const getSubstitutes = async () => {
@@ -103,7 +109,7 @@ const MedSubstitutes = () => {
         });
         const substitutesJson = await substitutes.json();
         const realSubstitutes =
-            optimise(substitutesJson, chosenMed.id, chosenMed.boxAmount, chosenMed.refund)
+            optimise(substitutesJson, chosenMed.id, boxAmount, refund)
             .map(({price, amount, substitute}) => ({
                 price,
                 substitute: {
@@ -195,7 +201,7 @@ const MedSubstitutes = () => {
                                 color: theme.palette.primary[300]
                             }}
                         >
-                            {(parseInt(chosenMed.boxAmount) * parseFloat(chosenMed.upcharge)).toFixed(2)} zł
+                            {(parseInt(boxAmount) * parseFloat(chosenMed.upcharge)).toFixed(2)} zł
                         </TableCell>
                     </TableRow>
                 </TableBody>
