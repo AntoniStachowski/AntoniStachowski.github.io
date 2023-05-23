@@ -7,45 +7,9 @@ import SnackBar from "./SnackBar";
 import { MedContext } from "./medInfo";
 import SearchField from "./utils/SearchField";
 import { requestPath } from "./utils/utils";
-//import makePDF from "./makePDF";
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
+import FabPDF from './FabPDF';
 
 const ref = React.createRef();
-
-let makePDF = async ()=> {
-    console.log("makePDF");
-    const input = document.getElementById('divToPrint');
-    const pdf = new jsPDF('p', 'mm', 'a4', true);
-    var body = document.body,
-    html = document.documentElement;
-
-    var height = Math.max( body.scrollHeight, body.offsetHeight, 
-                       html.clientHeight, html.scrollHeight, html.offsetHeight );
-    let displacement = 0;
-    let canvasSize = 0;
-    for (let i = 0; i < 100; i++) {
-        if (i > 0) pdf.addPage('a4', 'p');
-        await html2canvas(document.body, 
-            {scrollY: displacement, y: displacement+120 * (i!=0), backgroundColor: '#121212', width: 1400, height: Math.min(1400*Math.sqrt(2), height-displacement), windowWidth:1400, windowHeight:Math.min(1400*Math.sqrt(2), height-displacement)}).then( (canvas) => {
-        console.log("html2canvas");
-        let imgWidth = 210;
-        let imgHeight = canvas.height * imgWidth / canvas.width;
-        const imgData = canvas.toDataURL('img/png');
-        canvasSize = canvas.height;
-        //console.log(imgData);
-        console.log(canvas.height);
-        console.log(canvas.width);
-        console.log(window.innerWidth);
-        pdf.addImage(canvas, 'PNG', 0, 0, imgWidth, imgHeight);})
-        if(height-displacement < 1400*Math.sqrt(2)) break;
-        displacement = displacement + canvasSize - 350 + 120*(i!=0);
-        
-    }
-    // pdf.output('dataurlnewwindow'
-    pdf.save("download.pdf");
-}
-
 
 const SearchResults = () => {
     const [meds, setMeds] = useState([]);
@@ -101,7 +65,6 @@ const SearchResults = () => {
     }
 
     const handleOnClick = async (med, key) => {
-        await makePDF();
         setIsDialogOpen(true);
         setClickedMed({key: key, ...med})
 
@@ -117,6 +80,7 @@ const SearchResults = () => {
 
     return (
         <div>
+            <FabPDF/>
             <div style = {{display: "flex", flexDirection: "column", width: "100vw", height: "100vh"}} ref={ref}>
                 <MedInfoDialog
                     isOpen = {isDialogOpen}

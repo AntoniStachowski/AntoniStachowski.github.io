@@ -1,5 +1,5 @@
 import { useTheme } from "@emotion/react";
-import { Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { Fab, Paper, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { pink } from "@mui/material/colors";
 import { fontFamily } from "@mui/system";
 import React, { useEffect, useState } from "react";
@@ -7,6 +7,7 @@ import "../assets/fonts.css"
 import { MedContext } from "./medInfo";
 import { requestPath } from "./utils/utils";
 import optimise from "./utils/optimise";
+import FabPDF from "./FabPDF";
 
 const MedSubstitutes = () => {
     const theme = useTheme();
@@ -123,6 +124,7 @@ const MedSubstitutes = () => {
 
     return (
         <div style = {{padding: "0 20px 20px 20px"}}>
+            <FabPDF/>
             <Typography sx = {{
                 width: "calc(100vw - 40px)",
                 height: 125,
@@ -145,10 +147,7 @@ const MedSubstitutes = () => {
                             key = {key}
                             sx = {{
                                 fontSize: 20,
-                                //backgroundColor: theme.palette.primary[500],
-                                //backgroundColor: "rgba(233,30,99,0.5)",
                                 backgroundColor: "#0a0a0a",
-                                //color: theme.palette.primary[500],
                                 borderTopLeftRadius: key === 0 ? 20 : 0,
                             }}
                             width={`${feature.widthPercentage*100/widthSum}%`}
@@ -176,8 +175,6 @@ const MedSubstitutes = () => {
                                 key = {key}
                                 sx = {{
                                     fontSize: 20,
-                                    //backgroundColor: theme.palette.primary[300],
-                                    //backgroundColor: "rgba(240, 98, 146, 0.5)",
                                     backgroundColor: "#303030",
                                     //color: theme.palette.primary[300],
                                     borderBottomLeftRadius: key === 0 ? 20 : 0,
