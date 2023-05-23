@@ -12,6 +12,7 @@ const Search = () => {
     const [input, setInput] = useState("");
 
     const handleSearchButtonOnClick = () => {
+        //let inputFixed = input.replace("%", "%25").replace(/\\/, "%5c").replace("|", "%7c");
         setSearchPhrase(input);
         navigate("/searchResults");
     }

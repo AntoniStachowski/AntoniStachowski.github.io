@@ -11,6 +11,32 @@ import FabPDF from './FabPDF';
 
 const ref = React.createRef();
 
+const escapeChar = [
+    {regexLiteral: / /g, replacement: "%20"},
+    {regexLiteral: /\\/g, replacement: "%5c"},
+    {regexLiteral: /\|/g, replacement: "%7c"},
+    {regexLiteral: /%/g, replacement: "%25"},
+    {regexLiteral: /&/g, replacement: "%26"},
+    {regexLiteral: /\//g, replacement: "%2f"},
+    {regexLiteral: /\?/g, replacement: "%3f"},
+    {regexLiteral: /#/g, replacement: "%23"},
+    {regexLiteral: /;/g, replacement: "%3b"},
+    {regexLiteral: /:/g, replacement: "%3a"},
+    {regexLiteral: /@/g, replacement: "%40"},
+    {regexLiteral: /=/g, replacement: "%3d"},
+    {regexLiteral: /\+/g, replacement: "%2b"},
+    {regexLiteral: /\$/g, replacement: "%24"},
+    {regexLiteral: /</g, replacement: "%3c"},
+    {regexLiteral: />/g, replacement: "%3e"},
+    {regexLiteral: /`/g, replacement: "%60"},
+    {regexLiteral: /\[/g, replacement: "%5b"},
+    {regexLiteral: /\]/g, replacement: "%5d"},
+    {regexLiteral: /\{/g, replacement: "%7b"},
+    {regexLiteral: /\}/g, replacement: "%7d"},
+    {regexLiteral: /\^/g, replacement: "%5e"},
+    {regexLiteral: /~/g, replacement: "%7e"},
+]
+
 const SearchResults = () => {
     const [meds, setMeds] = useState([]);
     const [medsDuplicates, setMedsDuplicates] = useState([]);
@@ -23,7 +49,11 @@ const SearchResults = () => {
     
     const getMedsLikeSearch = async () => {
         const phrase = input === "" ? searchPhrase : input;
-        const medsLikeSearch = await fetch(`${requestPath}/drugs?search=${phrase}`, {
+        let phraseFixed = phrase;
+        for (let i = 0; i < escapeChar.length; i++) {
+            phraseFixed = phraseFixed.replace(escapeChar[i].regexLiteral, escapeChar[i].replacement);
+        }
+        const medsLikeSearch = await fetch(`${requestPath}/drugs?search=${phraseFixed}`, {
             method: 'GET'
         });
         
