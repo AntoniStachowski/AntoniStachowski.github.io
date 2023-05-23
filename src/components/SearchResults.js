@@ -1,4 +1,4 @@
-import {Fab, IconButton, TextField } from "@mui/material";
+import {Fab } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
 import Logo from "../assets/logo2copy.svg";
 import SearchIcon from '@mui/icons-material/Search';
@@ -7,8 +7,45 @@ import SnackBar from "./SnackBar";
 import { MedContext } from "./medInfo";
 import SearchField from "./utils/SearchField";
 import { requestPath } from "./utils/utils";
-import {jsPDF} from 'jspdf';
-import { html2pdf } from "html2pdf.js";
+//import makePDF from "./makePDF";
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
+
+const ref = React.createRef();
+
+let makePDF = async ()=> {
+    console.log("makePDF");
+    const input = document.getElementById('divToPrint');
+    const pdf = new jsPDF('p', 'mm', 'a4', true);
+    var body = document.body,
+    html = document.documentElement;
+
+    var height = Math.max( body.scrollHeight, body.offsetHeight, 
+                       html.clientHeight, html.scrollHeight, html.offsetHeight );
+    let displacement = 0;
+    let canvasSize = 0;
+    for (let i = 0; i < 100; i++) {
+        if (i > 0) pdf.addPage('a4', 'p');
+        await html2canvas(document.body, 
+            {scrollY: displacement, y: displacement+120 * (i!=0), backgroundColor: '#121212', width: 1400, height: Math.min(1400*Math.sqrt(2), height-displacement), windowWidth:1400, windowHeight:Math.min(1400*Math.sqrt(2), height-displacement)}).then( (canvas) => {
+        console.log("html2canvas");
+        let imgWidth = 210;
+        let imgHeight = canvas.height * imgWidth / canvas.width;
+        const imgData = canvas.toDataURL('img/png');
+        canvasSize = canvas.height;
+        //console.log(imgData);
+        console.log(canvas.height);
+        console.log(canvas.width);
+        console.log(window.innerWidth);
+        pdf.addImage(canvas, 'PNG', 0, 0, imgWidth, imgHeight);})
+        if(height-displacement < 1400*Math.sqrt(2)) break;
+        displacement = displacement + canvasSize - 350 + 120*(i!=0);
+        
+    }
+    // pdf.output('dataurlnewwindow'
+    pdf.save("download.pdf");
+}
+
 
 const SearchResults = () => {
     const [meds, setMeds] = useState([]);
@@ -63,28 +100,8 @@ const SearchResults = () => {
         getMedsLikeSearch();
     }
 
-    const handleOnClick = (med, key) => {
-        console.log(document.getElementsByTagName('html')[0].innerHTML);
-        //console log html body
-        console.log(document.querySelector('body').innerHTML);
-        //get element "logo"
-        console.log(document.getElementById('logo').innerHTML);
-        var body = document.querySelector('body').innerHTML;
-        //remove "background-image: [...]" from body using regex
-        body = body.replace(/background-image: url\([^)]+\);/g, "");
-        console.log(body);
-
-        var doc = new jsPDF('l', 'mm', [1200, 1210]);   
-
-        /*doc.html(body, {
-        callback: function (doc) {
-            doc.save();
-        },
-        x: 10,
-		y: 10
-        });*/
-        var html = document.getElementById('page');
-        html2pdf().from(html).save();
+    const handleOnClick = async (med, key) => {
+        await makePDF();
         setIsDialogOpen(true);
         setClickedMed({key: key, ...med})
 
@@ -99,66 +116,68 @@ const SearchResults = () => {
     }
 
     return (
-        <div style = {{display: "flex", flexDirection: "column", width: "100vw", height: "100vh"}} id="page">
-            <MedInfoDialog
-                isOpen = {isDialogOpen}
-                setIsOpen = {setIsDialogOpen}
-                clickedMed = {clickedMed}
-                refunds={refunds}
-            />
-            <SnackBar/>
-            <div style = {{
-                width: "100vw",
-                position: "fixed",
-                zIndex: 100,
-                height: 120,
-                display: "flex",
-                alignContent: "center",
-                alignItems: "center",
-                borderBottom: "1px solid #707070",
-                backgroundImage: `url(${Logo})`,
-                backgroundSize: "auto 80px",
-                backgroundRepeat: "no-repeat",
-                backgroundPosition: "top 20px left 30px",
-                backgroundColor: "#000000"
-            }} id="logo">
-                <SearchField
-                    sx = {{maxWidth: 600, flex: 1, marginLeft: 20}}
-                    input = {input}
-                    setInput={setInput}
+        <div>
+            <div style = {{display: "flex", flexDirection: "column", width: "100vw", height: "100vh"}} ref={ref}>
+                <MedInfoDialog
+                    isOpen = {isDialogOpen}
+                    setIsOpen = {setIsDialogOpen}
+                    clickedMed = {clickedMed}
+                    refunds={refunds}
                 />
-                <Fab
-                    color = "primary"
-                    sx = {{marginLeft: 4}}
-                    onClick={handleSearchButtonOnClick}
-                >
-                    <SearchIcon/>
-                </Fab>
-                
-            </div>
-            <div style={{marginLeft: 160, marginTop: 120}}>
-                {meds.map((med, key) => 
-                    <div
-                        key = {key}
-                        style = {{
-                            borderRadius: 20,
-                            maxWidth: 712,
-                            margin: "25px 0 25px 0",
-                            padding: "20px 25px 20px 25px",
-                            marginLeft: "-25px",
-                            transition: "background-color 200ms linear",
-                            fontSize: 20,
-                        }}
-                        onMouseOver = {(event) => event.target.style.background = "#404040"}
-                        onMouseLeave = {(event) => event.target.style.background = "none"}
-                        onClick = {() => handleOnClick(med, key)}
+                <SnackBar/>
+                <div style = {{
+                    width: "100vw",
+                    position: "fixed",
+                    zIndex: 100,
+                    height: 120,
+                    display: "flex",
+                    alignContent: "center",
+                    alignItems: "center",
+                    borderBottom: "1px solid #707070",
+                    backgroundImage: `url(${Logo})`,
+                    backgroundSize: "auto 80px",
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "top 20px left 30px",
+                    backgroundColor: "#000000"
+                }} id="logo">
+                    <SearchField
+                        sx = {{maxWidth: 600, flex: 1, marginLeft: 20}}
+                        input = {input}
+                        setInput={setInput}
+                    />
+                    <Fab
+                        color = "primary"
+                        sx = {{marginLeft: 4}}
+                        onClick={handleSearchButtonOnClick}
                     >
-                        <div style = {{pointerEvents: "none", lineHeight: 2, fontSize: 24, color: "#ffc107"}}>
-                            <b>{med.name}</b>
+                        <SearchIcon/>
+                    </Fab>
+                    
+                </div>
+                <div style={{marginLeft: 160, marginTop: 120}}>
+                    {meds.map((med, key) => 
+                        <div
+                            key = {key}
+                            style = {{
+                                borderRadius: 20,
+                                maxWidth: 712,
+                                margin: "25px 0 25px 0",
+                                padding: "20px 25px 20px 25px",
+                                marginLeft: "-25px",
+                                transition: "background-color 200ms linear",
+                                fontSize: 20,
+                            }}
+                            onMouseOver = {(event) => event.target.style.background = "#404040"}
+                            onMouseLeave = {(event) => event.target.style.background = "none"}
+                            onClick = {() => handleOnClick(med, key)}
+                        >
+                            <div style = {{pointerEvents: "none", lineHeight: 2, fontSize: 24, color: "#ffc107"}}>
+                                <b>{med.name}</b>
+                            </div>
+                            {med.formDose}, {med.content}
                         </div>
-                        {med.formDose}, {med.content}
-                    </div>
-                )}
+                    )}
+                </div>
             </div>
         </div>
     )
