@@ -120,7 +120,6 @@ const SearchResults = () => {
 
     return (
         <div>
-            <FabPDF/>
             <div style = {{display: "flex", flexDirection: "column", width: "100vw", height: "100vh"}} ref={ref}>
                 <MedInfoDialog
                     isOpen = {isDialogOpen}
@@ -156,6 +155,7 @@ const SearchResults = () => {
                     >
                         <SearchIcon/>
                     </Fab>
+                    <FabPDF/>
                     
                 </div>
                 <div style={{marginLeft: 160, marginTop: 120}}>
