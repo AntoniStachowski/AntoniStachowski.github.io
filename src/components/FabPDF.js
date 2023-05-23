@@ -1,12 +1,13 @@
 import { Fab, Tooltip } from "@mui/material";
 import Fade from '@mui/material/Fade';
 import React from "react";
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 const FabPDF = ({ }) => {
     const [clicked, setClicked] = React.useState(false);
+    const [disabled, setDisabled] = React.useState(false);
     const makePDF = async ()=> {
         console.log("makePDF");
         const pdf = new jsPDF('p', 'mm', 'a4', true);
@@ -49,9 +50,11 @@ const FabPDF = ({ }) => {
     }
 
     const handleOnClick = async () => {
+        setDisabled(true);
         setClicked(true);
         await makePDF();
         setClicked(false);
+        setDisabled(false);
     }
 
     return (
@@ -60,9 +63,9 @@ const FabPDF = ({ }) => {
             right: 25, top: 25,
         }}>
             <Fade in = {!clicked} timeout={400}>
-            <Tooltip title="Export to PDF" onClick={handleOnClick}>
+            <Tooltip title="Export to PDF" onClick={(!disabled) ? handleOnClick : () => {}}>
                 <Fab size="large" color="secondary" aria-label="add">
-                    <ArrowDownwardIcon/>
+                    <PictureAsPdfIcon/>
                 </Fab>
             </Tooltip>
             </Fade>
