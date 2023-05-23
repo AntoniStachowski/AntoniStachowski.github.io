@@ -7,6 +7,9 @@ import MedSubstitutes from './components/MedSubstitutes';
 import { Errors } from './components/errors';
 import { MedInfo } from './components/medInfo';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import * as React from "react";
+import * as ReactDOM from "react-dom";
+import { HashRouter } from "react-router-dom";
 
 function App() {
     const theme = createTheme({
@@ -22,13 +25,13 @@ function App() {
             <Errors>
                 <MedInfo>
                     <CssBaseline/>
-                    <BrowserRouter>
+                    <HashRouter>
                         <Routes>
-                            <Route path = "/" element = {<Search/>}/>
-                            <Route path = "/searchResults" element = {<SearchResults/>}/>
-                            <Route path = "/substitutes" element = {<MedSubstitutes/>}/>
+                            <Route path = "" element = {<Search/>}/>
+                            <Route path = "searchResults" element = {<SearchResults/>}/>
+                            <Route path = "substitutes" element = {<MedSubstitutes/>}/>
                         </Routes>
-                    </BrowserRouter>
+                    </HashRouter>
                 </MedInfo>
             </Errors>
         </ThemeProvider>
