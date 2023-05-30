@@ -2,16 +2,15 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Te
 import React, { useContext, useEffect, useState } from "react";
 import { ErrorContext } from "./errors";
 import { useNavigate } from "react-router-dom";
-import { MedContext } from "./medInfo";
 
 const MedInfoDialog = ({isOpen, setIsOpen, clickedMed, refunds}) => {
     const [refund, setRefund] = useState("");
     const [textFieldValue, setTextFieldValue] = useState("");
-    const { setMedInfo } = useContext(MedContext);
 
     useEffect(() => {
+        setTextFieldValue("");
         setRefund(refunds[0]);
-    }, []);
+    }, [isOpen]);
 
     const navigate = useNavigate();
     const {setErrorMessage} = useContext(ErrorContext);

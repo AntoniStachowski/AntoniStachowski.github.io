@@ -1,41 +1,16 @@
 import {Fab } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Logo from "../assets/logo2copy.svg";
 import SearchIcon from '@mui/icons-material/Search';
 import MedInfoDialog from "./MedInfoDialog";
 import SnackBar from "./SnackBar";
-import { MedContext } from "./medInfo";
 import SearchField from "./utils/SearchField";
 import { requestPath } from "./utils/utils";
 import FabPDF from './FabPDF';
+import LoadingPage from "./LoadingPage";
+import { escapeChar } from "./utils/escapeChars";
 
 const ref = React.createRef();
-
-const escapeChar = [
-    {regexLiteral: / /g, replacement: "%20"},
-    {regexLiteral: /\\/g, replacement: "%5c"},
-    {regexLiteral: /\|/g, replacement: "%7c"},
-    {regexLiteral: /%/g, replacement: "%25"},
-    {regexLiteral: /&/g, replacement: "%26"},
-    {regexLiteral: /\//g, replacement: "%2f"},
-    {regexLiteral: /\?/g, replacement: "%3f"},
-    {regexLiteral: /#/g, replacement: "%23"},
-    {regexLiteral: /;/g, replacement: "%3b"},
-    {regexLiteral: /:/g, replacement: "%3a"},
-    {regexLiteral: /@/g, replacement: "%40"},
-    {regexLiteral: /=/g, replacement: "%3d"},
-    {regexLiteral: /\+/g, replacement: "%2b"},
-    {regexLiteral: /\$/g, replacement: "%24"},
-    {regexLiteral: /</g, replacement: "%3c"},
-    {regexLiteral: />/g, replacement: "%3e"},
-    {regexLiteral: /`/g, replacement: "%60"},
-    {regexLiteral: /\[/g, replacement: "%5b"},
-    {regexLiteral: /\]/g, replacement: "%5d"},
-    {regexLiteral: /\{/g, replacement: "%7b"},
-    {regexLiteral: /\}/g, replacement: "%7d"},
-    {regexLiteral: /\^/g, replacement: "%5e"},
-    {regexLiteral: /~/g, replacement: "%7e"},
-]
 
 const SearchResults = () => {
     const [meds, setMeds] = useState([]);
@@ -49,7 +24,9 @@ const SearchResults = () => {
     const [refunds, setRefunds] = useState([]);
     const [disabled, setDisabled] = useState(false);
     
+    const [waitForMeds, setWaitForMeds] = useState(false);
     const getMedsLikeSearch = async () => {
+        setWaitForMeds(true);
         searchPhrase = localStorage.getItem("searchPhrase");
         const phrase = input === "" ? searchPhrase : input;
         let phraseFixed = phrase;
@@ -65,9 +42,9 @@ const SearchResults = () => {
             = await medsLikeSearchJson.sort(
                 (a, b) => {
                     if ((a.name > b.name)
-                    || (a.name == b.name && a.formDose > b.formDose)
-                    || (a.name == b.name && a.formDose == b.formDose && a.content > b.content)) return 1;
-                    if (a.name == b.name && a.formDose == b.formDose && a.content == b.content) return 0;
+                    || (a.name === b.name && a.formDose > b.formDose)
+                    || (a.name === b.name && a.formDose === b.formDose && a.content > b.content)) return 1;
+                    if (a.name === b.name && a.formDose === b.formDose && a.content === b.content) return 0;
                     return -1;
                 }
             );
@@ -85,6 +62,7 @@ const SearchResults = () => {
         });
         setMedsDuplicates(medsLikeSearchJsonSorted);
         setMeds(medsLikeSearchJsonSortedNoDuplicates);
+        setWaitForMeds(false);
     }
 
     useEffect(() => {
@@ -120,7 +98,28 @@ const SearchResults = () => {
 
     return (
         <div>
-            <div style = {{display: "flex", flexDirection: "column", width: "100vw", height: "100vh"}} ref={ref}>
+            {waitForMeds
+                ?
+                <div style = {{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100vw",
+                    height: "100vh",
+                    position: "fixed",
+                }}>
+                    <LoadingPage/>
+                </div>
+                :
+                <div></div>
+            }
+            <div style = {{
+                display: "flex",
+                flexDirection: "column",
+                width: "100vw",
+                height: "100vh",
+                opacity: waitForMeds ? 0.5 : 1,
+            }} ref={ref}>
                 <MedInfoDialog
                     isOpen = {isDialogOpen}
                     setIsOpen = {setIsDialogOpen}
