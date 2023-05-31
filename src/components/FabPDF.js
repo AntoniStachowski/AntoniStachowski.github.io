@@ -1,5 +1,4 @@
-import { Fab, Tooltip } from "@mui/material";
-import Fade from '@mui/material/Fade';
+import { CircularProgress, Fab, Tooltip } from "@mui/material";
 import React from "react";
 import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
 import jsPDF from 'jspdf';
@@ -31,15 +30,11 @@ const FabPDF = ({ }) => {
                     windowHeight:Math.min(1400*Math.sqrt(2),
                     height-displacement
                 )}).then( (canvas) => {
-            console.log("html2canvas");
+            
             let imgWidth = 210;
             let imgHeight = canvas.height * imgWidth / canvas.width;
-            const imgData = canvas.toDataURL('img/png');
+            
             canvasSize = canvas.height;
-            //console.log(imgData);
-            console.log(canvas.height);
-            console.log(canvas.width);
-            console.log(window.innerWidth);
             pdf.addImage(canvas, 'PNG', 0, 0, imgWidth, imgHeight);})
             if(height-displacement < 1400*Math.sqrt(2)) break;
             displacement = displacement + canvasSize - 350 + 120*(i!=0);
@@ -62,13 +57,16 @@ const FabPDF = ({ }) => {
             position: "absolute",
             right: 25, top: 25,
         }}>
-            <Fade in = {!clicked} timeout={400}>
+            {/*<Fade in = {!clicked} timeout={400}>*/}
             <Tooltip title="Export to PDF" onClick={(!disabled) ? handleOnClick : () => {}}>
+                {!clicked ?
                 <Fab size="large" color="secondary" aria-label="add">
                     <PictureAsPdfIcon/>
                 </Fab>
+                :
+                <CircularProgress color = "secondary"/>}
             </Tooltip>
-            </Fade>
+            {/*</Fade>*/}
         </div>
     );
 }

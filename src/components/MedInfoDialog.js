@@ -4,7 +4,7 @@ import { ErrorContext } from "./errors";
 import { useNavigate } from "react-router-dom";
 
 const MedInfoDialog = ({isOpen, setIsOpen, clickedMed, refunds}) => {
-    const [refund, setRefund] = useState("");
+    const [refund, setRefund] = useState(refunds[0]);
     const [textFieldValue, setTextFieldValue] = useState("");
 
     useEffect(() => {
@@ -52,7 +52,7 @@ const MedInfoDialog = ({isOpen, setIsOpen, clickedMed, refunds}) => {
         //setMedInfo(textFieldValue, refund, clickedMed);
         navigate("/substitutes");
     }
-
+    
     return (
         <Dialog
             open = {isOpen}
@@ -75,6 +75,7 @@ const MedInfoDialog = ({isOpen, setIsOpen, clickedMed, refunds}) => {
                     select
                     label = "Podaj poziom refundacji"
                     value = {refund}
+                    defaultValue={refunds[0]}
                     onChange = {(e) => setRefund(e.target.value)}
                     variant = "filled"
                 >

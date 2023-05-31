@@ -1,5 +1,5 @@
 import {Fab } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Logo from "../assets/logo2copy.svg";
 import SearchIcon from '@mui/icons-material/Search';
 import MedInfoDialog from "./MedInfoDialog";
@@ -9,6 +9,7 @@ import { requestPath } from "./utils/utils";
 import FabPDF from './FabPDF';
 import LoadingPage from "./LoadingPage";
 import { escapeChar } from "./utils/escapeChars";
+import { ErrorContext } from "./errors";
 
 const ref = React.createRef();
 
@@ -19,16 +20,17 @@ const SearchResults = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [clickedMed, setClickedMed] = useState({});
     //const {searchPhrase, setSearchPhrase} = useContext(MedContext);
-    let searchPhrase = ""; 
+    let searchPhraseToContext = ""; 
     const [input, setInput] = useState("");
     const [refunds, setRefunds] = useState([]);
     const [disabled, setDisabled] = useState(false);
-    
+    const {setErrorMessage} = useContext(ErrorContext);
+
     const [waitForMeds, setWaitForMeds] = useState(false);
     const getMedsLikeSearch = async () => {
         setWaitForMeds(true);
-        searchPhrase = localStorage.getItem("searchPhrase");
-        const phrase = input === "" ? searchPhrase : input;
+        searchPhraseToContext = localStorage.getItem("searchPhraseContext");
+        const phrase = input === "" ? searchPhraseToContext : input;
         let phraseFixed = phrase;
         for (let i = 0; i < escapeChar.length; i++) {
             phraseFixed = phraseFixed.replace(escapeChar[i].regexLiteral, escapeChar[i].replacement);
@@ -66,18 +68,17 @@ const SearchResults = () => {
     }
 
     useEffect(() => {
-        setInput(searchPhrase);
+        setInput(localStorage.getItem("searchPhraseContext"));
         getMedsLikeSearch();
     }, [])
 
     const handleSearchButtonOnClick = async () => {
         if(disabled) {
-            console.log("disabled");
             return;
         }
         setDisabled(true);
         //setSearchPhrase(input);
-        localStorage.setItem("searchPhrase", input);
+        localStorage.setItem("searchPhraseContext", input);
         await getMedsLikeSearch();
         setDisabled(false);
     }
@@ -92,13 +93,15 @@ const SearchResults = () => {
                 medRefunds.push(meddd.refund);
             }
         });
+
+        medRefunds = [... new Set(medRefunds)];
         
         setRefunds(medRefunds);
     }
 
     return (
         <div>
-            {waitForMeds
+            {waitForMeds || disabled
                 ?
                 <div style = {{
                     display: "flex",
@@ -172,9 +175,18 @@ const SearchResults = () => {
                             }}
                             onMouseOver = {(event) => event.target.style.background = "#404040"}
                             onMouseLeave = {(event) => event.target.style.background = "none"}
-                            onClick = {() => handleOnClick(med, key)}
+                            onClick = {(
+                                med.isAvailable)
+                                ? () => handleOnClick(med, key)
+                                : () => {setErrorMessage("Lek niedostępny")
+                            }}
                         >
-                            <div style = {{pointerEvents: "none", lineHeight: 2, fontSize: 24, color: "#ffc107"}}>
+                            <div style = {{
+                                pointerEvents: "none",
+                                lineHeight: 2,
+                                fontSize: 24,
+                                color: med.isAvailable ? "#ffc107" : "#c0c0c0"
+                            }}>
                                 <b>{med.name}</b>
                             </div>
                             {med.formDose}, {med.content}
